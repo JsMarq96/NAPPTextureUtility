@@ -1,60 +1,53 @@
+import shutil
+import os.path
 from PIL import Image
 from DirectoryTransversal import file_search
-import shutil
-import png
-import os.path
+from multiprocessing import Pool, cpu_count
 
 IMAGE_TYPES = ('.png', '.jpg')
 
-class TexPackResize:
-    '''
+
+'''
         Texture pack resize utility by Juan S. Marquerie
         Using the PIL library, apply bicubic interpolation in order to escale,
         or downscale the directory
-    '''
+'''
 
-    def __init__(self, new_scale):
-        self.scale = new_scale
-    
-    def change_scale(self, new_scale):
-        self.scale = new_scale
-
-    '''
-        Function to scale a single image, and save it
-    '''
-    def image_scale(self, img_adress, result_img_adress, new_size):
-        img = Image.open(img_adress).convert('RGBA')
-        img.resize(new_size, Image.BICUBIC).save(result_img_adress)
+'''
+   Function to scale a single image, and save it
+'''
+def image_scale(img_adress, result_img_adress, new_size):
+    img = Image.open(img_adress).convert('RGBA')
+    img.resize(new_size, Image.BICUBIC).save(result_img_adress)
 
     '''
         Function to clone a full folder directory, in order to scale it
     '''
-    def directory_clone(self, directory, location=''):
-        new_dir_name = os.path.join(location, os.path.basename(directory) + '_' + str(self.scale))
-        print(new_dir_name)
-        shutil.copytree(directory, new_dir_name)
+def directory_clone(directory, location='', add_on=''):
+    new_dir_name = os.path.join(location, os.path.basename(directory) + '_' + add_on)
+    print(new_dir_name)
+    shutil.copytree(directory, new_dir_name)
         
-        return new_dir_name
+    return new_dir_name
 
-    '''
+'''
         Iterate throught a directory, and scale all the images
         to the selected size
-    '''
-    def scale_directory(self, directory, img_types):
-        images_in_directory = file_search(img_types, directory)
+'''
+def scale_directory(directory, img_types, scale):
+    images_in_directory = file_search(img_types, directory)
 
-        print('Scalling ' + str(len(images_in_directory)) + ' images...')
-        for image in images_in_directory:
-            print('Scalling image: ' + image)
-            self.image_scale(image, image, self.scale)
+    print('Scalling ' + str(len(images_in_directory)) + ' images...')
+    with Pool(processes=cpu_count()) as pool:
+        pool.map(lambda x: image_scale(x, x, scale), images_in_directory)
 
-    '''
-        (Main function)
-        Duplicates a directory and then scales it
-    '''
-    def resize_directory(self, directory, address='', img_types = IMAGE_TYPES):
-        new_dir = self.directory_clone(directory, address)
-        self.scale_directory(os.path.join(address,new_dir), img_types)
+'''
+    (Main function)
+     Duplicates a directory and then scales it
+'''
+def resize_directory(directory, scale, address='', img_types = IMAGE_TYPES):
+    new_dir = directory_clone(directory, address, str(scale[0]) + 'x')
+    scale_directory(os.path.join(address,new_dir), img_types, scale)
 
 
 '''
