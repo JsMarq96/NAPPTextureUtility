@@ -17,5 +17,3 @@ def img_compress(file_dir='', mode=CMODE.NONE):
         imgs.quantize(256, method=3, dither=0).save(file_dir)
     elif mode == CMODE.HEAVY:
         imgs.quantize(256, method=2, dither=0).save(file_dir)
-
-    i = 0
