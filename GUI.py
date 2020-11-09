@@ -1,6 +1,7 @@
 from tkinter import Label, Entry, Button, Tk, filedialog, messagebox, END
+from tkinter import Listbox, OptionMenu, StringVar, Toplevel, Variable
 from PIL import Image, ImageTk
-from TexPackResize import TexPackResize
+from Napp_Gen import generate_resourcepacks
 from os import path
 import time
 
@@ -9,57 +10,72 @@ import time
     by Juan S. Marquerie
 '''
 
-VERSION = '0.65'
+VERSION = '0.50'
 
-'''
-    This requeires a bit of an explanation... While I was doing
-    my first Android App project, I added as a background a really no good,
-    ugly green to orange gradient; and del_cieno critisized and mocked
-    endlessly this choice...
-    In hindshight, this was for the better, but I can still have some fun
-    with this...
-'''
-HORRIBLE_BACKGROUND = True
+COMP_OPTIONS = ['None', 'Light', 'Hard', 'Light w/Hard Speculars']
+compr_result = 'None'
+pack_res = 1024
 
-def define_GUI(tk_window, resize_util):
+def define_popup_GUI(tk_window):
+    tk_window.geometry('350x100')
+
+    # Labels
+    label_txt1 = Label(tk_window, text='Destination pack resolution')
+    label_txt1.grid(column=0, row=0)
+    label_txt2 = Label(tk_window, text='Compression Levels')
+    label_txt2.grid(column=2, row=0)
+
+    # Option menu stuff
+    comp_opt_var = StringVar(tk_window)
+    comp_opt_var.set(COMP_OPTIONS[0])
+    compress_menu = OptionMenu(tk_window, comp_opt_var, *COMP_OPTIONS)
+    compress_menu.grid(column=2, row=1)
+
+    # Text input
+    txt_direction_input = Entry(tk_window, width=15)
+    txt_direction_input.grid(column=0, row=1)
+
+    def butt_press():
+        global compr_result, pack_res
+        compr_result = comp_opt_var.get()
+        pack_res = int(txt_direction_input.get())
+
+        tk_window.destroy()
+
+    exit_button = Button(tk_window, text='Ok', command=butt_press)
+    exit_button.grid(column=1, row=3)
+
+
+def define_GUI(tk_window):
     # Window Config
-    tk_window.title('TexturePack Resizing Utility v ' + VERSION)
-    tk_window.geometry('650x100')
+    tk_window.title('TexturePack Resizer Utility v ' + VERSION)
+    tk_window.geometry('750x300')
 
-    if HORRIBLE_BACKGROUND:
-        back_img = ImageTk.PhotoImage(Image.open('imgs/background.jpg'))
-        back = Label(tk_window, image=back_img)
-        back.place(x=0, y=0, relwidth=1, relheight=1)
-        back.image = back_img
 
     # Labels
     label_folder_origin = Label(tk_window, text='Enter the texture pack/origin folder')
     label_folder_origin.grid(column=0, row=0)
-    label_resolution = Label(tk_window, text='Resolution')
-    label_resolution.grid(column=3, row=0)
     label_resolution = Label(tk_window, text='Enter the resulting texture direction')
     label_resolution.grid(column=7, row=0)
-    label_x = Label(tk_window, text='x ')
-    label_x.grid(column=4, row=1)
-    label_file_extensions = Label(tk_window, text='File extensions:')
-    label_file_extensions.grid(column=1, row=2)
 
     # Text Input
     txt_direction_input = Entry(tk_window, width=25)
     txt_direction_input.grid(column=0, row=1)
-    txt_width_input = Entry(tk_window, width=4)
-    txt_width_input.grid(column=3, row=1)
-    txt_width_input.insert(0,'512')
-    txt_height_input = Entry(tk_window, width=4)
-    txt_height_input.grid(column=5, row=1)
-    txt_height_input.insert(0,'512')
     txt_result_direction_input = Entry(tk_window, width=25)
     txt_result_direction_input.grid(column=7, row=1)
-    txt_file_extensions = Entry(tk_window, width=10)
-    txt_file_extensions.grid(column=3, row=2)
-    txt_file_extensions.insert(0,'.png')
+
+    # List box
+    pack_var = Variable()
+    pack_list = Listbox(tk_window, listvariable=pack_var)
+    pack_list.grid(column=9, row=2)
 
     # Button Events
+    def add_pack_output():
+        top = Toplevel(tk_window)
+        define_popup_GUI(top)
+        tk_window.wait_window(top)
+        pack_list.insert(END, str(pack_res) + '-' + compr_result)
+
     def launch_item_search():
         selected_folder = filedialog.askdirectory()
         txt_direction_input.delete(0, END)
@@ -74,11 +90,11 @@ def define_GUI(tk_window, resize_util):
         button_resize.configure(state='disabled', text='Resizing...')
         tk_window.update()
 
-        extensions = txt_file_extensions.get()
-        extensions = tuple(extensions.split(','))
+        pack_list = pack_var.get()
 
-        resize_util.scale = (int(txt_width_input.get()), int(txt_height_input.get()))
-        resize_util.resize_directory(txt_direction_input.get(), txt_result_direction_input.get(), extensions)
+        generate_resourcepacks(txt_direction_input.get(), pack_list, txt_result_direction_input.get())
+        #resize_util.resize_directory(txt_direction_input.get(), txt_result_direction_input.get(), extensions)
+
         messagebox.showinfo('TexturePack Resizing Utility', 'Finished resizing!')
         button_resize.configure(state='normal', text='Resize')
         tk_window.update()
@@ -89,8 +105,10 @@ def define_GUI(tk_window, resize_util):
     button_search.grid(column=1, row=1)
     button_search_2 = Button(tk_window, text='Search', command=launch_search_result_folder)
     button_search_2.grid(column=8, row=1)
+    button_add_resize_pack = Button(tk_window, text='Add output pack', command=add_pack_output)
+    button_add_resize_pack.grid(column=9, row=1)
     button_resize = Button(tk_window, text='Resize', command=resize)
-    button_resize.grid(column=5, row=6)
+    button_resize.grid(column=9, row=3)
 
 
 '''
@@ -98,5 +116,6 @@ def define_GUI(tk_window, resize_util):
 '''
 if __name__ == '__main__':
     window = Tk()
-    define_GUI(window, TexPackResize((512, 512)))
+    define_GUI(window)
+    #define_popup_GUI(window)
     window.mainloop()
