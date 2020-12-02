@@ -1,6 +1,7 @@
 import os.path
 from TexPackResize import resize_directory, directory_clone
 from PackResizer import resize as compress_directory, CMODE
+from TexturesBlacklist import load_texture_blacklist, load_texture_scale_whitelist
 
 def resize(origin_folder, result_folder, scale):
     return resize_directory(origin_folder, result_folder, scale)
@@ -22,6 +23,9 @@ COMP_DICT = { 'Light': { 'COLOR': CMODE.LIGHT,
              }
 
 def generate_resourcepacks(base_resource_pack, variations, result_folder):
+    # Load the whitelist and blacklist files
+    load_texture_blacklist()
+    load_texture_scale_whitelist()
     for pack in variations:
         spl_p = pack.split('-')
 

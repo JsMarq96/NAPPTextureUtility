@@ -59,9 +59,8 @@ def scale_directory(directory, img_types, scale):
      Duplicates a directory and then scales it
 '''
 def resize_directory(directory, scale, address='', img_types = IMAGE_TYPES):
-    print(scale)
     new_dir = directory_clone(directory, address, str(scale) + 'x')
-    scale_directory(os.path.join(address,new_dir), img_types, (scale, scale))
+    scale_directory(os.path.join(address,new_dir), img_types, scale)
 
 
 '''
