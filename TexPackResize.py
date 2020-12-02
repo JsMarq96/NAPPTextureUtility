@@ -22,11 +22,18 @@ def image_scale(img_adress, result_img_adress, new_size):
     img.resize(new_size, Image.BICUBIC).save(result_img_adress)
 
 def img_scale_adapter(x):
+    if x[1] == None:
+        return
     image_scale(x[0], x[0], x[1])
 
-    '''
-        Function to clone a full folder directory, in order to scale it
-    '''
+def file_dir_crop(x):
+    if 'assets' in x:
+        return 'assets' + x.rsplit('assets')[1]
+    return x
+
+'''
+    Function to clone a full folder directory, in order to scale it
+'''
 def directory_clone(directory, location='', add_on=''):
     print(directory, 'add on: ', add_on)
     new_dir_name = os.path.join(location, os.path.basename(directory+ '_' + str(add_on)))
@@ -41,7 +48,7 @@ def directory_clone(directory, location='', add_on=''):
 '''
 def scale_directory(directory, img_types, scale):
     images_in_directory = file_search(img_types, directory)
-    images_in_directory = [(x, get_texture_scale(x, scale)) for x in images_in_directory]
+    images_in_directory = [(x, get_texture_scale(file_dir_crop(x), scale)) for x in images_in_directory]
 
     print('Scalling ' + str(len(images_in_directory)) + ' images...')
     with Pool(processes=cpu_count()) as pool:
