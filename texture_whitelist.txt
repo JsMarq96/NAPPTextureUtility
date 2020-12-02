@@ -1,0 +1,5 @@
+# FORMAT
+# <dir from assets> ratio_size_x,ratio_size_y
+assets/minecraft/textures/entity/skeleton/skeleton.png 1.0,2.0
+assets/minecraft/textures/entity/skeleton/skeleton_n.png 1.0,2.0
+assets/minecraft/textures/entity/skeleton/skeleton_s.png 1.0,2.0
