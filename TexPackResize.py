@@ -2,6 +2,7 @@ import shutil
 import os.path
 from PIL import Image
 from DirectoryTransversal import file_search
+from TexturesBlacklist import get_texture_scale
 from multiprocessing import Pool, cpu_count
 
 IMAGE_TYPES = ('.png', '.jpg')
@@ -22,6 +23,7 @@ def image_scale(img_adress, result_img_adress, new_size):
 
 def img_scale_adapter(x):
     image_scale(x[0], x[0], x[1])
+
     '''
         Function to clone a full folder directory, in order to scale it
     '''
@@ -39,7 +41,7 @@ def directory_clone(directory, location='', add_on=''):
 '''
 def scale_directory(directory, img_types, scale):
     images_in_directory = file_search(img_types, directory)
-    images_in_directory = [(x, scale) for x in images_in_directory]
+    images_in_directory = [(x, get_texture_scale(x, scale)) for x in images_in_directory]
 
     print('Scalling ' + str(len(images_in_directory)) + ' images...')
     with Pool(processes=cpu_count()) as pool:
