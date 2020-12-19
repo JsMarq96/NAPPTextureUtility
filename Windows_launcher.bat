@@ -1,4 +1,4 @@
 echo on
 title NAPP Texture Utility Launcher”
-python GUI.py
+ubuntu2004 run python3 GUI.py
 exit

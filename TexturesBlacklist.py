@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os.path.normpath
+import os.path
 
 '''
     Loads the blacklist of texutres/images that you dont need to
@@ -15,8 +15,8 @@ import os.path.normpath
     TODO: Externalice the config dirs
 '''
 
-BLACKLIST_DIR = 'texture_blacklist.txt'
-WHITELIST_DIR = 'texture_whitelist.txt'
+BLACKLIST_DIR = 'configs/texture_blacklist.txt'
+WHITELIST_DIR = 'configs/texture_whitelist.txt'
 
 BLACKLIST = []
 WHITELIST = {}
@@ -27,7 +27,7 @@ WHITELIST = {}
 def load_texture_blacklist(file_dir = BLACKLIST_DIR):
     global BLACKLIST
     BLACKLIST = []
-    with open(file_dir, 'r') as file_blacklist:
+    with open(os.path.normpath(file_dir), 'r') as file_blacklist:
         lines = file_blacklist.readlines()
 
         for line in lines:
@@ -43,7 +43,7 @@ def load_texture_blacklist(file_dir = BLACKLIST_DIR):
 def load_texture_scale_whitelist(file_dir = WHITELIST_DIR):
     global WHITELIST
     WHITELIST = {}
-    with open(file_dir, 'r') as file_whitelist:
+    with open(os.path.normpath(file_dir), 'r') as file_whitelist:
         lines = file_whitelist.readlines()
 
         for line in lines:
