@@ -1,4 +1,5 @@
 echo on
 title NAPP Texture Utility Launcher”
-ubuntu2004 run python3 GUI.py
+START "XWindowLauncher" "C:\Program Files (x86)\Xming\Xming.exe" :0 -clipboard -multiwindow
+ubuntu2004 run DISPLAY=:0 python3 GUI.py
 exit
