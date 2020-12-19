@@ -65,15 +65,14 @@ class RadixTree:
 
                 if len(iter_node.base_str) > base_similarity:
                     # Substitute root with the new node, with two leaves
-                    # Before ---[P1] --...
+                    # Before ---[P1] --... and whats to add [N2]
                     # After:
                     #             --[N2]
                     # ------[N1]-|--[P1]
 
-                    prev_root_node_index = int(self.base_node.base_str[base_similarity + 1])
+                    prev_root_node_index = int(iter_node.base_str[base_similarity + 1])
                     new_root_node = RT_Node()
-                    new_root_node.base_str = self.base_node.base_str[0:base_similarity]
-                    new_root_node.nodes[prev_root_node_index] = self.base_node
+                    new_root_node.base_str = iter_node.base_str[0:base_similarity]
+                    new_root_node.nodes[prev_root_node_index] = iter_node
                     new_root_node.nodes[prev_root_node_index].base_str = new_root_node.nodes[prev_root_node_index].base_str[base_similarity+1:]
-
-                    self.base_node = new_root_node
+                else:

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import os.path.normpath
+
 '''
     Loads the blacklist of texutres/images that you dont need to
     resize
@@ -31,9 +33,10 @@ def load_texture_blacklist(file_dir = BLACKLIST_DIR):
         for line in lines:
             if line[0] == '#':
                 continue # Comment
-            BLACKLIST.append(line.replace('\n', ''))
+            BLACKLIST.append(os.path.normpath(line.replace('\n', '')))
 
     print(BLACKLIST)
+
 '''
     Generate the whitelist of the non-square textures
 '''
@@ -50,7 +53,7 @@ def load_texture_scale_whitelist(file_dir = WHITELIST_DIR):
             file_name = tmp[0]
             tmp = tmp[1].rsplit(',')
 
-            WHITELIST[file_name] = (float(tmp[0]), float(tmp[1]))
+            WHITELIST[os.path.normpath(file_name)] = (float(tmp[0]), float(tmp[1]))
     print(WHITELIST)
 
 def get_texture_scale(name, base_scale):
