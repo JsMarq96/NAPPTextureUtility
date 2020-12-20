@@ -11,6 +11,7 @@ def resize_img(file_dir):
 
        
 def resize(pack_dir='.', file_term={}):
+    print('############# ' + pack_dir)
     file_dirs = file_search(('.png'), pack_dir)
     file_dirs_tuple= []
 

@@ -50,7 +50,7 @@ def scale_directory(directory, img_types, scale):
     images_in_directory = file_search(img_types, directory)
     images_in_directory = [(x, get_texture_scale(file_dir_crop(x), scale)) for x in images_in_directory]
 
-    print('Scalling ' + str(len(images_in_directory)) + ' images...')
+    print('Scalling ' + str(len(images_in_directory)) + ' on ' + directory +' images...')
     with Pool(processes=cpu_count()) as pool:
         pool.map(img_scale_adapter, images_in_directory)
 

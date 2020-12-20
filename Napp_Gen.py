@@ -29,7 +29,10 @@ def generate_resourcepacks(base_resource_pack, variations, result_folder):
     for pack in variations:
         spl_p = pack.split('-')
 
-        resize(base_resource_pack, int(spl_p[0]), os.path.join(result_folder, str(spl_p[0]) + '_' + spl_p[1] ))
+        dir_name = os.path.join(result_folder, str(spl_p[0]) + '_' + spl_p[1] )
+        print(dir_name)
+
+        resize(base_resource_pack, int(spl_p[0]), dir_name)
 
         if spl_p[1] != 'None':
-            compress(base_resource_pack, result_folder, COMP_DICT[spl_p[1]])
+            compress('', dir_name, COMP_DICT[spl_p[1]])
