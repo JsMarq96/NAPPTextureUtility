@@ -7,4 +7,5 @@ pip3 install pypng
 git clone https://github.com/python-pillow/Pillow.git
 cd Pillow
 sudo MAX_CONCURRENCY=1 python3 setup.py build_ext --enable-imagequant install
+cd ..
 sudo rm -rf Pillow/
