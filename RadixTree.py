@@ -5,74 +5,118 @@
     by Juan S. Marquerie
 '''
 
-'''
-Que tiene que hacer
-Dada un string, decir sis e tiene que escalar con que proporciones
-'''
 
-'''
-    Returns the char similarity count between 2 strigs
-'''
 def str_compare(str1, str2):
+    '''Returns the char similarity count between 2 strigs'''
     i = 0
     for i in range(min(len(str1), len(str2))):
         if str1[i] != str2[i]:
-            return i + 1;
-    return i
+            return i + 1
+    return i + 1
 
 class RT_Node:
+    '''Node of a radix tree'''
     def __init__(self):
-        self.base_str = ''
+        self.base_str = None
         self.result = None
-        self.nodes = [None] * 256
+        self.nodes = [None] * 128
 
 class RadixTree:
+    '''Custom radix tree implementation'''
     def __init__(self, default_value=None):
         self.base_node = RT_Node()
         self.default_result = default_value
 
-    def add(self, search_str, result):
-        # Comparar la search str entre todos los nodos que tenga
-        # Caso 1: No similarity
-        # Case 2: Kinda similar on the end
-        # Case 3: Similar on the start, up to the middle
-        # Are 2 and 3 the same...?
+    def get(self, search_str):
+        '''Fethc an element from the radix tree'''
+        iter_node = self.base_node.nodes[ord(search_str[0])]
+        while not iter_node is None:
+            similarity = str_compare(search_str, iter_node.base_str)
 
+            #print(':+SEARCH ', similarity, search_str, iter_node.base_str)
+            if similarity == len(search_str) and similarity == len(iter_node.base_str):
+                return iter_node.result
+            elif similarity == 0:
+                return self.default_result
+            else:
+                # Split the similar part of the serach and continues search on another node
+                search_str = search_str[similarity:]
+                iter_node = iter_node.nodes[ord(search_str[0])]
+
+        return self.default_result
+
+
+    def add(self, search_str, result):
+        '''Append an element to the radix tree'''
         # Base node insert
-        if self.base_node.nodes[int(search_str[0])] == None:
+        if self.base_node.nodes[ord(search_str[0])] is None:
             tmp = RT_Node()
             tmp.base_str = search_str
             tmp.result = result
-            self.base_node.nodes[int(search_str[0])] = tmp
+            self.base_node.nodes[ord(search_str[0])] = tmp
 
             return
 
-        iter_node = self.base_node.nodes[int(search_str[0])]
+        iter_node = self.base_node.nodes[ord(search_str[0])]
 
         while True:
             base_similarity = str_compare(search_str, iter_node.base_str)
-            crop_search_str = search_str[base_similarity:]
-            search_index = int(crop_search_str[0])
+            crop_search_str = search_str[base_similarity-1:]
+            search_index = ord(crop_search_str[0])
 
-            if iter_node.nodes[search_index] == None:
-                tmp = RT_Node()
-                tmp.base_str = crop_search_str
-                tmp.result = result
-                self.base_node.nodes[int(search_str[0])] = tmp
+            if base_similarity < len(iter_node.base_str):
+                old_root_node = RT_Node()
+                old_root_node.nodes[:] = iter_node.nodes[:]
+                old_root_node.base_str = iter_node.base_str[base_similarity-1:]
+                old_root_node.result = iter_node.result
+
+                iter_node.base_str = search_str[:base_similarity-1]
+                iter_node.nodes = [None] * 128
+
+                iter_node.nodes[ord(old_root_node.base_str[0])] = old_root_node
+
+                new_node = RT_Node()
+                new_node.base_str = crop_search_str
+                new_node.result = result
+
+                iter_node.nodes[search_index] = new_node
 
                 return
-            else:
+            elif base_similarity > len(iter_node.base_str):
 
-                if len(iter_node.base_str) > base_similarity:
-                    # Substitute root with the new node, with two leaves
-                    # Before ---[P1] --... and whats to add [N2]
-                    # After:
-                    #             --[N2]
-                    # ------[N1]-|--[P1]
+                if iter_node.nodes[search_index] is None:
+                    new_node = RT_Node()
+                    new_node.base_str = crop_search_str
+                    new_node.result = result
 
-                    prev_root_node_index = int(iter_node.base_str[base_similarity + 1])
-                    new_root_node = RT_Node()
-                    new_root_node.base_str = iter_node.base_str[0:base_similarity]
-                    new_root_node.nodes[prev_root_node_index] = iter_node
-                    new_root_node.nodes[prev_root_node_index].base_str = new_root_node.nodes[prev_root_node_index].base_str[base_similarity+1:]
-                else:
+                    iter_node.nodes[search_index] = new_node
+                    return
+
+                iter_node = iter_node.nodes[search_index]
+                search_str = crop_search_str
+
+if __name__ == '__main__':
+    rt = RadixTree('DUNNO')
+
+    rt.add('data', 'yes')
+
+    print('+', rt.get('data'))
+    print('+', rt.get('dano'))
+    print('+', rt.get('bruh'))
+
+    print('===========')
+
+    rt.add('dano', 'no')
+
+    print('+', rt.get('data'))
+    print('+', rt.get('dano'))
+    print('+', rt.get('bruh'))
+
+    print('===========')
+
+    rt.add('bruh', 'epic')
+    rt.add('data', 'epic')
+
+    print('+', rt.get('data'))
+    print('+', rt.get('dano'))
+    print('+', rt.get('bruh'))
