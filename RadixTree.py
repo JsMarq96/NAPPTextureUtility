@@ -39,13 +39,31 @@ class RadixTree:
             elif similarity == 0 or similarity < len(iter_node.base_str):
                 return self.default_result
             else:
-                #print(search_str, similarity, search_str[:similarity-1])
                 # Split the similar part of the serach and continues search on another node
                 search_str = search_str[similarity:]
                 iter_node = iter_node.nodes[ord(search_str[0])]
 
         return self.default_result
 
+    def get_with_wildcard(self, search_str):
+        '''Flexibilices the get procedure with the addiciont of * wildcards'''
+        iter_node = self.base_node.nodes[ord(search_str[0])]
+        while not iter_node is None:
+            similarity = str_compare(search_str, iter_node.base_str)
+
+             # Addition of the wildcard
+            if iter_node.base_str[similarity - 1] == '*':
+                return iter_node.result
+            if similarity == len(search_str) and similarity == len(iter_node.base_str):
+                return iter_node.result
+            elif similarity == 0 or similarity < len(iter_node.base_str):
+                return self.default_result
+            else:
+                # Split the similar part of the serach and continues search on another node
+                search_str = search_str[similarity:]
+                iter_node = iter_node.nodes[ord(search_str[0])]
+
+        return self.default_result
 
     def add(self, search_str, result):
         '''Append an element to the radix tree'''

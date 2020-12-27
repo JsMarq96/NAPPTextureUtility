@@ -1,22 +1,4 @@
 #FORMAT:
 #<path from assets folder>
-assets/minecraft/textures/gui/options_background.png
-assets/minecraft/textures/gui/title/background/panorama_2.png
-assets/minecraft/textures/gui/title/background/panorama_1.png
-assets/minecraft/textures/gui/title/background/panorama_0.png
-assets/minecraft/textures/gui/title/background/panorama_3.png
-assets/minecraft/textures/gui/title/background/panorama_4.png
-assets/minecraft/textures/gui/title/background/panorama_5.png
-assets/minecraft/textures/gui/title/background/panorama_overlay.png
-assets/minecraft/textures/entity/chest/normal.png
-assets/minecraft/textures/entity/chest/normal_s.png
-assets/minecraft/textures/entity/chest/normal_left.png
-assets/minecraft/textures/entity/chest/normal_left_s.png
-assets/minecraft/textures/entity/chest/normal_right.png
-assets/minecraft/textures/entity/chest/normal_right_s.png
-assets/minecraft/textures/entity/chest/trapped.png
-assets/minecraft/textures/entity/chest/trapped_s.png
-assets/minecraft/textures/entity/chest/trapped_left.png
-assets/minecraft/textures/entity/chest/trapped_left_s.png
-assets/minecraft/textures/entity/chest/trapped_right.png
-assets/minecraft/textures/entity/chest/trapped_right_s.png
+assets/minecraft/textures/gui/title*
+assets/minecraft/textures/entity/chest*

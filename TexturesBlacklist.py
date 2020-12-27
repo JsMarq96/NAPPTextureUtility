@@ -60,10 +60,8 @@ def get_texture_scale(name, base_scale):
     global BLACKLIST
     global WHITELIST
 
-    if 'panorama' in name:
-        print(name)
-    if not BLACKLIST.get(name):
+    if not BLACKLIST.get_with_wildcard(name):
         print('Skip ', name)
         return None
-    tmp = WHITELIST.get(name)
+    tmp = WHITELIST.get_with_wildcard(name)
     return (int(base_scale * tmp[0]), int(base_scale * tmp[1]))
