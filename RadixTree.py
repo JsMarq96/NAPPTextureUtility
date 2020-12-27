@@ -36,9 +36,10 @@ class RadixTree:
             #print(':+SEARCH ', similarity, search_str, iter_node.base_str)
             if similarity == len(search_str) and similarity == len(iter_node.base_str):
                 return iter_node.result
-            elif similarity == 0:
+            elif similarity == 0 or similarity < len(iter_node.base_str):
                 return self.default_result
             else:
+                #print(search_str, similarity, search_str[:similarity-1])
                 # Split the similar part of the serach and continues search on another node
                 search_str = search_str[similarity:]
                 iter_node = iter_node.nodes[ord(search_str[0])]
@@ -61,12 +62,12 @@ class RadixTree:
 
         while True:
             base_similarity = str_compare(search_str, iter_node.base_str)
-            crop_search_str = search_str[base_similarity-1:]
+            crop_search_str = search_str[base_similarity:]
             search_index = ord(crop_search_str[0])
 
             if base_similarity < len(iter_node.base_str):
                 old_root_node = RT_Node()
-                old_root_node.nodes[:] = iter_node.nodes[:]
+                old_root_node.nodes = iter_node.nodes
                 old_root_node.base_str = iter_node.base_str[base_similarity-1:]
                 old_root_node.result = iter_node.result
 
@@ -76,14 +77,13 @@ class RadixTree:
                 iter_node.nodes[ord(old_root_node.base_str[0])] = old_root_node
 
                 new_node = RT_Node()
-                new_node.base_str = crop_search_str
+                new_node.base_str = search_str[base_similarity-1:]
                 new_node.result = result
 
-                iter_node.nodes[search_index] = new_node
+                iter_node.nodes[ord(new_node.base_str[0])] = new_node
 
                 return
             elif base_similarity > len(iter_node.base_str):
-
                 if iter_node.nodes[search_index] is None:
                     new_node = RT_Node()
                     new_node.base_str = crop_search_str
@@ -94,29 +94,30 @@ class RadixTree:
 
                 iter_node = iter_node.nodes[search_index]
                 search_str = crop_search_str
+            else:
+                if iter_node.nodes[search_index] is None:
+                    new_node = RT_Node()
+                    new_node.base_str = crop_search_str
+                    new_node.result = result
+
+                    iter_node.nodes[search_index] = new_node
+                    return
+                search_str = crop_search_str
+                iter_node = iter_node.nodes[search_index]
 
 if __name__ == '__main__':
-    rt = RadixTree('DUNNO')
+    rt = RadixTree(True)
 
-    rt.add('data', 'yes')
+    test_arr = ['assets/minecraft/textures/gui/title/background/panorama_0.png',
+                'assets/minecraft/textures/gui/title/background/panorama_4.png',
+                'assets/minecraft/textures/gui/title/background/panorama_3.png',
+                'assets/minecraft/textures/gui/title/background/panorama_5.png',
+                'assets/minecraft/textures/gui/title/background/panorama_2.png',
+                'assets/minecraft/textures/gui/title/background/panorama_1.png']
 
-    print('+', rt.get('data'))
-    print('+', rt.get('dano'))
-    print('+', rt.get('bruh'))
-
-    print('===========')
-
-    rt.add('dano', 'no')
-
-    print('+', rt.get('data'))
-    print('+', rt.get('dano'))
-    print('+', rt.get('bruh'))
-
-    print('===========')
-
-    rt.add('bruh', 'epic')
-    rt.add('data', 'epic')
-
-    print('+', rt.get('data'))
-    print('+', rt.get('dano'))
-    print('+', rt.get('bruh'))
+    for t in test_arr:
+        print('Inserting ', t)
+        rt.add(t, False)
+        for v in test_arr:
+            print(v, rt.get(v))
+        print('==========')

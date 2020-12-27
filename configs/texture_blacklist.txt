@@ -1,10 +1,9 @@
 #FORMAT:
 #<path from assets folder>
-pack.png
 assets/minecraft/textures/gui/options_background.png
-assets/minecraft/textures/gui/title/background/panorama_0.png
-assets/minecraft/textures/gui/title/background/panorama_1.png
 assets/minecraft/textures/gui/title/background/panorama_2.png
+assets/minecraft/textures/gui/title/background/panorama_1.png
+assets/minecraft/textures/gui/title/background/panorama_0.png
 assets/minecraft/textures/gui/title/background/panorama_3.png
 assets/minecraft/textures/gui/title/background/panorama_4.png
 assets/minecraft/textures/gui/title/background/panorama_5.png

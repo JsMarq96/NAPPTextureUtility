@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os.path
+from RadixTree import RadixTree
 
 '''
     Loads the blacklist of texutres/images that you dont need to
@@ -18,23 +19,22 @@ import os.path
 BLACKLIST_DIR = 'configs/texture_blacklist.txt'
 WHITELIST_DIR = 'configs/texture_whitelist.txt'
 
-BLACKLIST = []
-WHITELIST = {}
+BLACKLIST = None
+WHITELIST = None
 
 '''
     Load the blacklist
 '''
 def load_texture_blacklist(file_dir = BLACKLIST_DIR):
     global BLACKLIST
-    BLACKLIST = []
+    BLACKLIST = RadixTree(True)
     with open(os.path.normpath(file_dir), 'r') as file_blacklist:
         lines = file_blacklist.readlines()
 
         for line in lines:
             if line[0] == '#':
                 continue # Comment
-            BLACKLIST.append(os.path.normpath(line.replace('\n', '')))
-
+            BLACKLIST.add(os.path.normpath(line.replace('\n', '')), False)
     print(BLACKLIST)
 
 '''
@@ -42,7 +42,7 @@ def load_texture_blacklist(file_dir = BLACKLIST_DIR):
 '''
 def load_texture_scale_whitelist(file_dir = WHITELIST_DIR):
     global WHITELIST
-    WHITELIST = {}
+    WHITELIST = RadixTree((1,1))
     with open(os.path.normpath(file_dir), 'r') as file_whitelist:
         lines = file_whitelist.readlines()
 
@@ -53,16 +53,17 @@ def load_texture_scale_whitelist(file_dir = WHITELIST_DIR):
             file_name = tmp[0]
             tmp = tmp[1].rsplit(',')
 
-            WHITELIST[os.path.normpath(file_name)] = (float(tmp[0]), float(tmp[1]))
+            WHITELIST.add(os.path.normpath(file_name), (float(tmp[0]), float(tmp[1])))
     print(WHITELIST)
 
 def get_texture_scale(name, base_scale):
     global BLACKLIST
     global WHITELIST
-    if name in BLACKLIST:
+
+    if 'panorama' in name:
+        print(name)
+    if not BLACKLIST.get(name):
+        print('Skip ', name)
         return None
-    if name in WHITELIST.keys():
-        tmp = WHITELIST[name]
-        return (int(tmp[0] * base_scale), int(tmp[1] * base_scale))
-    else:
-        return (base_scale, base_scale)
+    tmp = WHITELIST.get(name)
+    return (int(base_scale * tmp[0]), int(base_scale * tmp[1]))
