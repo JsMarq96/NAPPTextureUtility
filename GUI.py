@@ -99,6 +99,18 @@ def define_GUI(tk_window):
         button_resize.configure(state='normal', text='Resize')
         tk_window.update()
 
+    def resize_n_zip():
+        button_resize.configure(state='disabled', text='Resizing...')
+        tk_window.update()
+
+        pack_list = pack_var.get()
+
+        generate_resourcepacks(txt_direction_input.get(), pack_list, txt_result_direction_input.get(), True)
+        #resize_util.resize_directory(txt_direction_input.get(), txt_result_direction_input.get(), extensions)
+
+        messagebox.showinfo('TexturePack Resizing Utility', 'Finished resizing!')
+        button_resize.configure(state='normal', text='Resize')
+        tk_window.update()
 
     # Buttons
     button_search = Button(tk_window, text='Search', command=launch_item_search)
@@ -109,7 +121,8 @@ def define_GUI(tk_window):
     button_add_resize_pack.grid(column=9, row=1)
     button_resize = Button(tk_window, text='Resize', command=resize)
     button_resize.grid(column=9, row=3)
-
+    button_resize_zip = Button(tk_window, text='Resize & Zip', command=resize_n_zip)
+    button_resize_zip.grid(column=9, row=4)
 
 '''
     Launch the GUI
