@@ -34,9 +34,8 @@ def file_dir_crop(x):
 '''
     Function to clone a full folder directory, in order to scale it
 '''
-def directory_clone(directory, location='', add_on=''):
-    print(directory, 'add on: ', add_on)
-    new_dir_name = os.path.join(location, os.path.basename(directory+ '_' + str(add_on)))
+def directory_clone(directory, location='', file_name=''):
+    new_dir_name = os.path.join(location, file_name)
     print(new_dir_name)
     shutil.copytree(directory, new_dir_name)
         
@@ -58,8 +57,8 @@ def scale_directory(directory, img_types, scale):
     (Main function)
      Duplicates a directory and then scales it
 '''
-def resize_directory(directory, scale, address='', img_types = IMAGE_TYPES):
-    new_dir = directory_clone(directory, address, str(scale) + 'x')
+def resize_directory(directory, scale, address='', folder_name='', img_types = IMAGE_TYPES):
+    new_dir = directory_clone(directory, address, folder_name)
     scale_directory(os.path.join(address,new_dir), img_types, scale)
 
 

@@ -18,9 +18,11 @@ from RadixTree import RadixTree
 
 BLACKLIST_DIR = 'configs/texture_blacklist.txt'
 WHITELIST_DIR = 'configs/texture_whitelist.txt'
+FILENAMELIST_DIR = 'configs/filename_config.txt'
 
 BLACKLIST = None
 WHITELIST = None
+FILENAMES = {}
 
 '''
     Load the blacklist
@@ -56,6 +58,19 @@ def load_texture_scale_whitelist(file_dir = WHITELIST_DIR):
             WHITELIST.add(os.path.normpath(file_name), (float(tmp[0]), float(tmp[1])))
     print(WHITELIST)
 
+def load_file_names(file_dir = FILENAMELIST_DIR):
+    global FILENAMES
+    FILENAMES = {}
+    with open(os.path.normpath(file_dir), 'r') as file_whitelist:
+        lines = file_whitelist.readlines()
+
+        for line in lines:
+            if line[0] == '#':
+                continue  # a Comment
+            tmp = line.rsplit()
+            FILENAMES[tmp[0]] = tmp[1]
+
+
 def get_texture_scale(name, base_scale):
     global BLACKLIST
     global WHITELIST
@@ -65,3 +80,11 @@ def get_texture_scale(name, base_scale):
         return None
     tmp = WHITELIST.get_with_wildcard(name)
     return (int(base_scale * tmp[0]), int(base_scale * tmp[1]))
+
+def get_file_name(file_dir, config):
+    global FILENAMES
+    config_str = config[0] + '-' + config[1]
+    if not config_str in FILENAMES:
+        return os.path.basename(file_dir) + '_' + config[0] + 'x' + config[1]
+
+    return FILENAMES[config_str]
