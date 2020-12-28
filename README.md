@@ -1,6 +1,12 @@
 # NAPP Texture Utility
 A utility for resizing and (color) comppressing a Minecraft reource pack (or any folder of images), and exporting it to diferent resoultions.<br/>
 Now, it includes a blacklist functionality, that states the textures that can not be reduced (GUI and stuff), and a whitelist functionality, that keeps the aspect ratio of non-square textures, acording to their respective files.
+## Functionality
+- Batch scale up and down of a folder of images or texture pack, duplicating all the underliying files.
+- Blacklist to avoid scalling some images.
+- Whitelist to scale to a not standart (1:1) aspect ratio.
+- Export directly to zip.
+- Add export names for some configs.
 ## Depedencies
 - libimagequant (pip)
 - tkinter
