@@ -59,8 +59,9 @@ def scale_directory(directory, img_types, scale):
 '''
 def resize_directory(directory, scale, address='', folder_name='', img_types = IMAGE_TYPES):
     new_dir = directory_clone(directory, address, folder_name)
-    scale_directory(os.path.join(address,new_dir), img_types, scale)
-
+    new_file_direction = os.path.join(address,new_dir)
+    scale_directory(new_file_direction, img_types, scale)
+    return new_file_direction
 
 '''
     Command interface

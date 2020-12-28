@@ -28,7 +28,7 @@ def generate_resourcepacks(base_resource_pack, variations, result_folder):
         dir_name = result_folder #os.path.join(result_folder, str(spl_p[0]) + '_' + spl_p[1] )
         print('Directory res', dir_name)
 
-        resize_directory(base_resource_pack, int(spl_p[0]), dir_name, get_file_name(base_resource_pack, spl_p))
+        new_directory = resize_directory(base_resource_pack, int(spl_p[0]), dir_name, get_file_name(base_resource_pack, spl_p))
 
         if spl_p[1] != 'None':
-            compress_directory(dir_name, COMP_DICT[spl_p[1]])
+            compress_directory(new_directory, COMP_DICT[spl_p[1]])
