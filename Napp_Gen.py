@@ -1,10 +1,17 @@
 import zlib
 import zipfile
 import os
+from PIL import Image
 from TexPackResize import resize_directory
 from PackResizer import resize as compress_directory, CMODE
 from TexturesBlacklist import load_texture_blacklist, load_texture_scale_whitelist
 from TexturesBlacklist import load_file_names, get_file_name
+from TextureReplacment import get_replacement_list, load_replacements
+
+'''
+    TODO cleanup the Texture replacement: refactor names, and cleanup... inda nasty
+'''
+
 
 COMP_DICT = { 'Light': { 'COLOR': CMODE.LIGHT,
                          'NORM': CMODE.LIGHT,
@@ -23,6 +30,7 @@ def generate_resourcepacks(base_resource_pack, variations, result_folder, zip_it
     load_texture_blacklist()
     load_texture_scale_whitelist()
     load_file_names()
+    load_replacements()
 
     for pack in variations:
         spl_p = pack.split('-')
@@ -34,6 +42,14 @@ def generate_resourcepacks(base_resource_pack, variations, result_folder, zip_it
 
         if spl_p[1] != 'None':
             compress_directory(new_directory, COMP_DICT[spl_p[1]])
+
+        file_replacement_dict = get_replacement_list(pack)
+
+        if not file_replacement_dict is None:
+            for texture_dest in file_replacement_dict:
+                text_to_replace = Image.open(file_replacement_dict[texture_dest])
+                text_to_replace.save(os.path.join(new_directory, texture_dest))
+                print('TOREPLACE', new_directory, texture_dest)
 
         if zip_it:
             folder_name = os.path.basename(new_directory)
