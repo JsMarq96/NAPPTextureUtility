@@ -1,9 +1,10 @@
 from tkinter import Label, Entry, Button, Tk, filedialog, messagebox, END
 from tkinter import Listbox, OptionMenu, StringVar, Toplevel, Variable
 from PIL import Image, ImageTk
-from Napp_Gen import generate_resourcepacks
 from os import path
 import time
+from Napp_Gen import generate_resourcepacks
+from Splitter_GUI import splitter_GUI
 
 '''
     GUI with tkinter for easier use without the command line
@@ -76,6 +77,10 @@ def define_GUI(tk_window):
         tk_window.wait_window(top)
         pack_list.insert(END, str(pack_res) + '-' + compr_result)
 
+    def launch_splitter():
+        top = Toplevel(tk_window)
+        splitter_GUI(top)
+
     def launch_item_search():
         selected_folder = filedialog.askdirectory()
         txt_direction_input.delete(0, END)
@@ -123,6 +128,8 @@ def define_GUI(tk_window):
     button_resize.grid(column=9, row=3)
     button_resize_zip = Button(tk_window, text='Resize & Zip', command=resize_n_zip)
     button_resize_zip.grid(column=9, row=4)
+    button_launch_splitter = Button(tk_window, text='Texture Splitter Launcher', command=launch_splitter)
+    button_launch_splitter.grid(column=9, row=5)
 
 '''
     Launch the GUI
