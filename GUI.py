@@ -58,12 +58,16 @@ def define_GUI(tk_window):
     label_folder_origin.grid(column=0, row=0)
     label_resolution = Label(tk_window, text='Enter the resulting texture direction')
     label_resolution.grid(column=7, row=0)
+    label_resolution = Label(tk_window, text='Enter the pack version')
+    label_resolution.grid(column=0, row=3)
 
     # Text Input
     txt_direction_input = Entry(tk_window, width=25)
     txt_direction_input.grid(column=0, row=1)
     txt_result_direction_input = Entry(tk_window, width=25)
     txt_result_direction_input.grid(column=7, row=1)
+    txt_version_input = Entry(tk_window, width=25)
+    txt_version_input.grid(column=0, row=4)
 
     # List box
     pack_var = Variable()
@@ -97,7 +101,7 @@ def define_GUI(tk_window):
 
         pack_list = pack_var.get()
 
-        generate_resourcepacks(txt_direction_input.get(), pack_list, txt_result_direction_input.get())
+        generate_resourcepacks(txt_direction_input.get(), pack_list, txt_result_direction_input.get(), txt_version_input.get())
         #resize_util.resize_directory(txt_direction_input.get(), txt_result_direction_input.get(), extensions)
 
         messagebox.showinfo('TexturePack Resizing Utility', 'Finished resizing!')
@@ -110,7 +114,7 @@ def define_GUI(tk_window):
 
         pack_list = pack_var.get()
 
-        generate_resourcepacks(txt_direction_input.get(), pack_list, txt_result_direction_input.get(), True)
+        generate_resourcepacks(txt_direction_input.get(), pack_list, txt_result_direction_input.get(), txt_version_input.get(),True)
         #resize_util.resize_directory(txt_direction_input.get(), txt_result_direction_input.get(), extensions)
 
         messagebox.showinfo('TexturePack Resizing Utility', 'Finished resizing!')

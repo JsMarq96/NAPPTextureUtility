@@ -2,5 +2,5 @@
 256-None pack.png imgs/256.png
 512-None pack.png imgs/512.png
 1024-None pack.png imgs/1024.png
-512-light pack.png imgs/zero512.png
-1024-light pack.png imgs/zero1024.png
+512-Light pack.png imgs/zero512.png
+1024-Light pack.png imgs/zero1024.png
