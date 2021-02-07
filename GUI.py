@@ -13,12 +13,14 @@ from Splitter_GUI import splitter_GUI
 
 VERSION = '0.50'
 
+HORRIBLE_BACKGROUND = True
+
 COMP_OPTIONS = ['None', 'Light', 'Hard', 'Light w/Hard Speculars']
 compr_result = 'None'
 pack_res = 1024
 
 def define_popup_GUI(tk_window):
-    tk_window.geometry('350x100')
+    tk_window.geometry('350x197')
 
     # Labels
     label_txt1 = Label(tk_window, text='Destination pack resolution')
@@ -50,8 +52,13 @@ def define_popup_GUI(tk_window):
 def define_GUI(tk_window):
     # Window Config
     tk_window.title('TexturePack Resizer Utility v ' + VERSION)
-    tk_window.geometry('750x300')
+    tk_window.geometry('750x420')
 
+    if HORRIBLE_BACKGROUND:
+        back_img = ImageTk.PhotoImage(Image.open('imgs/back_or.jpeg'))
+        back = Label(tk_window, image=back_img)
+        back.place(x=0, y=0, relwidth=1, relheight=1)
+        back.image = back_img
 
     # Labels
     label_folder_origin = Label(tk_window, text='Enter the texture pack/origin folder')
