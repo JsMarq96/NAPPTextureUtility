@@ -1,5 +1,7 @@
-from tkinter import Label, Entry, Button, Tk, filedialog, messagebox, END
-from tkinter import Listbox, OptionMenu, StringVar, Toplevel, Variable
+#!/usr/bin/env python3
+
+from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QPushButton, QGridLayout, QLabel
+from PyQt5.QtWidgets import QListWidget, QComboBox, QFileDialog, QMessageBox
 from PIL import Image, ImageTk
 from os import path
 import time
@@ -7,146 +9,165 @@ from Napp_Gen import generate_resourcepacks
 from Splitter_GUI import splitter_GUI
 
 '''
-    GUI with tkinter for easier use without the command line
-    by Juan S. Marquerie
+    PyQt5 Line edit widget that adds drag n drop funcionality
 '''
+class DnDLineEdit(QLineEdit):
+    def __init__(self, folders = False):
+        # Basic widget config
+        super().__init__()
+        # For Drag n drops
+        self.setAcceptDrops(True)
+        self.file_url = ''
+        self.accept_folders = folders
 
-VERSION = '0.50'
+    def dropEvent(self, event):
+        # For the nature of the widget we just take the first
+        # element
+        self.setText(event.mimeData().urls()[0].path())
 
-HORRIBLE_BACKGROUND = True
+    def dropeEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.accept()
+        else:
+            event.ignore()
 
-COMP_OPTIONS = ['None', 'Light', 'Hard', 'Light w/Hard Speculars']
+
+#def image_compress_GUI(window):
 compr_result = 'None'
 pack_res = 1024
+compress_list = []
+list_view = None
 
-def define_popup_GUI(tk_window):
-    tk_window.geometry('350x197')
+def popup_dialog(txt):
+    msg = QMessageBox()
+    msg.setText(txt)
+    msg.exec_()
 
-    # Labels
-    label_txt1 = Label(tk_window, text='Destination pack resolution')
-    label_txt1.grid(column=0, row=0)
-    label_txt2 = Label(tk_window, text='Compression Levels')
-    label_txt2.grid(column=2, row=0)
+def options_dialog_GUI(window):
+    grid = QGridLayout()
 
-    # Option menu stuff
-    comp_opt_var = StringVar(tk_window)
-    comp_opt_var.set(COMP_OPTIONS[0])
-    compress_menu = OptionMenu(tk_window, comp_opt_var, *COMP_OPTIONS)
-    compress_menu.grid(column=2, row=1)
+    resolution_input = QLineEdit()
+    compression_picker = QComboBox()
+    compression_picker.addItems(['None', 'Light', 'Hard', 'Light w/Hard Speculars'])
 
-    # Text input
-    txt_direction_input = Entry(tk_window, width=15)
-    txt_direction_input.grid(column=0, row=1)
+    grid.addWidget(QLabel('Destination pack resolution:'), 0, 0)
+    grid.addWidget(QLabel('Compression Levels:'), 0, 3)
 
-    def butt_press():
-        global compr_result, pack_res
-        compr_result = comp_opt_var.get()
-        pack_res = int(txt_direction_input.get())
+    grid.addWidget(resolution_input, 1, 0)
+    grid.addWidget(compression_picker, 1, 3)
 
-        tk_window.destroy()
+    #Button events
+    def add_compression():
+        global compr_result, pack_res, list_view
+        compr_result = compression_picker.currentText()
+        pack_res = resolution_input.text()
+        tmp = str(pack_res) + '-' + compr_result
+        compress_list.append((pack_res, compr_result))
+        list_view.addItem(tmp)
+        window.close()
 
-    exit_button = Button(tk_window, text='Ok', command=butt_press)
-    exit_button.grid(column=1, row=3)
+    add_button = QPushButton('Add')
+    add_button.clicked.connect(add_compression)
+
+    grid.addWidget(add_button, 2, 2)
+
+    window.setLayout(grid)
 
 
-def define_GUI(tk_window):
-    # Window Config
-    tk_window.title('TexturePack Resizer Utility v ' + VERSION)
-    tk_window.geometry('750x420')
+def main_GUI(window):
+    global list_view
+    grid = QGridLayout()
 
-    if HORRIBLE_BACKGROUND:
-        back_img = ImageTk.PhotoImage(Image.open('imgs/back_or.jpeg'))
-        back = Label(tk_window, image=back_img)
-        back.place(x=0, y=0, relwidth=1, relheight=1)
-        back.image = back_img
+    origin_input = DnDLineEdit()
+    result_input = DnDLineEdit()
+    pack_version_input = QLineEdit()
 
-    # Labels
-    label_folder_origin = Label(tk_window, text='Enter the texture pack/origin folder')
-    label_folder_origin.grid(column=0, row=0)
-    label_resolution = Label(tk_window, text='Enter the resulting texture direction')
-    label_resolution.grid(column=7, row=0)
-    label_resolution = Label(tk_window, text='Enter the pack version')
-    label_resolution.grid(column=0, row=3)
+    list_view = QListWidget()
 
-    # Text Input
-    txt_direction_input = Entry(tk_window, width=25)
-    txt_direction_input.grid(column=0, row=1)
-    txt_result_direction_input = Entry(tk_window, width=25)
-    txt_result_direction_input.grid(column=7, row=1)
-    txt_version_input = Entry(tk_window, width=25)
-    txt_version_input.grid(column=0, row=4)
+    origin_search_button = QPushButton('Search')
+    result_search_button = QPushButton('Search')
+    add_compress_button = QPushButton('Add resolution')
+    scale_button = QPushButton('Scale')
+    scale_zip_button = QPushButton('Scale and Zip')
 
-    # List box
-    pack_var = Variable()
-    pack_list = Listbox(tk_window, listvariable=pack_var)
-    pack_list.grid(column=9, row=2)
+    # Button events
+    def origin_search():
+        filename, _ = QFileDialog.getOpenFileName(None, "Open Folder", '.', "")
+        if filename:
+            origin_input.setText(filename)
 
-    # Button Events
-    def add_pack_output():
-        top = Toplevel(tk_window)
-        define_popup_GUI(top)
-        tk_window.wait_window(top)
-        pack_list.insert(END, str(pack_res) + '-' + compr_result)
+    def result_search():
+        filename, _ = QFileDialog.getOpenFileName(None, "Open Folder", '.', "")
+        if filename:
+            result_input.setText(filename)
 
-    def launch_splitter():
-        top = Toplevel(tk_window)
-        splitter_GUI(top)
-
-    def launch_item_search():
-        selected_folder = filedialog.askdirectory()
-        txt_direction_input.delete(0, END)
-        txt_direction_input.insert(0,selected_folder)
-
-    def launch_search_result_folder():
-        selected_folder = filedialog.askdirectory()
-        txt_result_direction_input.delete(0, END)
-        txt_result_direction_input.insert(0,selected_folder)
+    def add_resolution():
+        res_window = QWidget()
+        options_dialog_GUI(res_window)
+        res_window.show()
 
     def resize():
-        button_resize.configure(state='disabled', text='Resizing...')
-        tk_window.update()
+        scale_button.setEnabled(False)
+        scale_zip_button.setEnabled(False)
 
-        pack_list = pack_var.get()
+        popup_dialog('Processing...')
 
-        generate_resourcepacks(txt_direction_input.get(), pack_list, txt_result_direction_input.get(), txt_version_input.get())
-        #resize_util.resize_directory(txt_direction_input.get(), txt_result_direction_input.get(), extensions)
+        generate_resourcepacks(origin_input.text(), compress_list, result_input.text(), pack_version_input.text())
 
-        messagebox.showinfo('TexturePack Resizing Utility', 'Finished resizing!')
-        button_resize.configure(state='normal', text='Resize')
-        tk_window.update()
+        scale_button.setEnabled(True)
+        scale_zip_button.setEnabled(True)
 
-    def resize_n_zip():
-        button_resize.configure(state='disabled', text='Resizing...')
-        tk_window.update()
+        popup_dialog('Finished!')
 
-        pack_list = pack_var.get()
+    def resize_zip():
+        scale_button.setEnabled(False)
+        scale_zip_button.setEnabled(False)
 
-        generate_resourcepacks(txt_direction_input.get(), pack_list, txt_result_direction_input.get(), txt_version_input.get(),True)
-        #resize_util.resize_directory(txt_direction_input.get(), txt_result_direction_input.get(), extensions)
+        popup_dialog('Processing...')
 
-        messagebox.showinfo('TexturePack Resizing Utility', 'Finished resizing!')
-        button_resize.configure(state='normal', text='Resize')
-        tk_window.update()
+        generate_resourcepacks(origin_input.text(), compress_list, result_input.text(), pack_version_input.text(), True)
 
-    # Buttons
-    button_search = Button(tk_window, text='Search', command=launch_item_search)
-    button_search.grid(column=1, row=1)
-    button_search_2 = Button(tk_window, text='Search', command=launch_search_result_folder)
-    button_search_2.grid(column=8, row=1)
-    button_add_resize_pack = Button(tk_window, text='Add output pack', command=add_pack_output)
-    button_add_resize_pack.grid(column=9, row=1)
-    button_resize = Button(tk_window, text='Resize', command=resize)
-    button_resize.grid(column=9, row=3)
-    button_resize_zip = Button(tk_window, text='Resize & Zip', command=resize_n_zip)
-    button_resize_zip.grid(column=9, row=4)
-    button_launch_splitter = Button(tk_window, text='Texture Splitter Launcher', command=launch_splitter)
-    button_launch_splitter.grid(column=9, row=5)
+        scale_button.setEnabled(True)
+        scale_zip_button.setEnabled(True)
 
-'''
-    Launch the GUI
-'''
+        popup_dialog('Finished!')
+
+    
+    origin_search_button.clicked.connect(origin_search)
+    result_search_button.clicked.connect(result_search)
+    add_compress_button.clicked.connect(add_resolution)
+    scale_button.clicked.connect(resize)
+    scale_zip_button.clicked.connect(resize_zip)
+
+    # First col
+    grid.addWidget(QLabel('Origin Resource pack:'), 1,0)
+    grid.addWidget(origin_input, 2, 0)
+    grid.addWidget(origin_search_button, 2, 1)
+    grid.addWidget(QLabel('Resource pack version:'), 5, 0)
+    grid.addWidget(pack_version_input, 6, 0)
+
+    # Second col
+    grid.addWidget(QLabel('Result Pack Direction:'), 1, 3)
+    grid.addWidget(result_input, 2, 3)
+    grid.addWidget(result_search_button, 2, 4)
+    grid.addWidget(QPushButton('Convert a single image'), 5, 4)
+
+    # Third col
+    grid.addWidget(QPushButton('Texture splitter'), 2, 6)
+    grid.addWidget(add_compress_button, 3, 6)
+    grid.addWidget(list_view, 4, 6)
+    grid.addWidget(scale_button, 5, 6)
+    grid.addWidget(scale_zip_button, 6, 6)
+
+    window.setLayout(grid)
+
+
 if __name__ == '__main__':
-    window = Tk()
-    define_GUI(window)
-    #define_popup_GUI(window)
-    window.mainloop()
+    app = QApplication([])
+    main_window = QWidget()
+
+    main_GUI(main_window)
+    #options_dialog_GUI(main_window)
+
+    main_window.show()
+    app.exec()
