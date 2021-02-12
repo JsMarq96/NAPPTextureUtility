@@ -33,7 +33,7 @@ def generate_resourcepacks(base_resource_pack, variations, result_folder, name_s
     load_replacements()
 
     for pack in variations:
-        spl_p = pack.split('-')
+        spl_p = pack
 
         dir_name = result_folder #os.path.join(result_folder, str(spl_p[0]) + '_' + spl_p[1] )
         print('Directory res', dir_name)
