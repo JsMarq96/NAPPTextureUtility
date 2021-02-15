@@ -4,9 +4,13 @@ from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QPushButton, QGrid
 from PyQt5.QtWidgets import QListWidget, QComboBox, QFileDialog, QMessageBox
 from PIL import Image, ImageTk
 from os import path
+import os
 import time
 from Napp_Gen import generate_resourcepacks
+from Text_Split import split_text
 from Splitter_GUI import splitter_GUI
+from tkinter import Tk
+
 
 '''
     PyQt5 Line edit widget that adds drag n drop funcionality
@@ -42,6 +46,8 @@ def popup_dialog(txt):
     msg = QMessageBox()
     msg.setText(txt)
     msg.exec_()
+
+
 
 def options_dialog_GUI(window):
     grid = QGridLayout()
@@ -89,6 +95,7 @@ def main_GUI(window):
     add_compress_button = QPushButton('Add resolution')
     scale_button = QPushButton('Scale')
     scale_zip_button = QPushButton('Scale and Zip')
+    splitter_button = QPushButton('Texture splitter')
 
     # Button events
     def origin_search():
@@ -100,6 +107,12 @@ def main_GUI(window):
         filename, _ = QFileDialog.getOpenFileName(None, "Open Folder", '.', "")
         if filename:
             result_input.setText(filename)
+
+    def show_splitter():
+        split_window = QWidget()
+        window = Tk()
+        splitter_GUI(window)
+        window.mainloop()
 
     def add_resolution():
         res_window = QWidget()
@@ -138,6 +151,7 @@ def main_GUI(window):
     add_compress_button.clicked.connect(add_resolution)
     scale_button.clicked.connect(resize)
     scale_zip_button.clicked.connect(resize_zip)
+    splitter_button.clicked.connect(show_splitter)
 
     # First col
     grid.addWidget(QLabel('Origin Resource pack:'), 1,0)
@@ -153,7 +167,7 @@ def main_GUI(window):
     grid.addWidget(QPushButton('Convert a single image'), 5, 4)
 
     # Third col
-    grid.addWidget(QPushButton('Texture splitter'), 2, 6)
+    grid.addWidget(splitter_button, 2, 6)
     grid.addWidget(add_compress_button, 3, 6)
     grid.addWidget(list_view, 4, 6)
     grid.addWidget(scale_button, 5, 6)
@@ -168,6 +182,7 @@ if __name__ == '__main__':
 
     main_GUI(main_window)
     #options_dialog_GUI(main_window)
+    #texture_splitter_GUI(main_window)
 
     main_window.show()
     app.exec()
