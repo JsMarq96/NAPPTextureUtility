@@ -45,9 +45,9 @@ def directory_clone(directory, location='', file_name=''):
         Iterate throught a directory, and scale all the images
         to the selected size
 '''
-def scale_directory(directory, img_types, scale):
+def scale_directory(directory, img_types, scale, compress_mode):
     images_in_directory = file_search(img_types, directory)
-    images_in_directory = [(x, get_texture_scale(file_dir_crop(x), scale)) for x in images_in_directory]
+    images_in_directory = [(x, get_texture_scale(file_dir_crop(x), scale, compress_mode)) for x in images_in_directory]
 
     print('Scalling ' + str(len(images_in_directory)) + ' on ' + directory +' images...')
     with Pool(processes=cpu_count()) as pool:
@@ -57,10 +57,10 @@ def scale_directory(directory, img_types, scale):
     (Main function)
      Duplicates a directory and then scales it
 '''
-def resize_directory(directory, scale, address='', folder_name='', img_types = IMAGE_TYPES):
+def resize_directory(directory, scale, address='', folder_name='', img_types = IMAGE_TYPES, compress_mode = ''):
     new_dir = directory_clone(directory, address, folder_name)
     new_file_direction = os.path.join(address,new_dir)
-    scale_directory(new_file_direction, img_types, scale)
+    scale_directory(new_file_direction, img_types, scale, compress_mode)
     return new_file_direction
 
 '''

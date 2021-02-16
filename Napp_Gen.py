@@ -5,7 +5,7 @@ from PIL import Image
 from TexPackResize import resize_directory
 from PackResizer import resize as compress_directory, CMODE
 from TexturesBlacklist import load_texture_blacklist, load_texture_scale_whitelist
-from TexturesBlacklist import load_file_names, get_file_name
+from TexturesBlacklist import load_file_names, get_file_name, load_default_sizes
 from TextureReplacment import get_replacement_list, load_replacements
 
 '''
@@ -31,6 +31,7 @@ def generate_resourcepacks(base_resource_pack, variations, result_folder, name_s
     load_texture_scale_whitelist()
     load_file_names()
     load_replacements()
+    load_default_sizes()
 
     for pack in variations:
         spl_p = pack
@@ -44,7 +45,7 @@ def generate_resourcepacks(base_resource_pack, variations, result_folder, name_s
             tmp = pack_export_name.split('@')
             pack_export_name = tmp[0] + name_subst + tmp[1]
 
-        new_directory = resize_directory(base_resource_pack, int(spl_p[0]), dir_name, pack_export_name)
+        new_directory = resize_directory(base_resource_pack, int(spl_p[0]), dir_name, pack_export_name,  ('.png', '.jpg'), pack)
 
         if spl_p[1] != 'None':
             compress_directory(new_directory, COMP_DICT[spl_p[1]])

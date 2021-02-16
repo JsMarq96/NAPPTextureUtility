@@ -19,10 +19,12 @@ from RadixTree import RadixTree
 BLACKLIST_DIR = 'configs/texture_blacklist.txt'
 WHITELIST_DIR = 'configs/texture_whitelist.txt'
 FILENAMELIST_DIR = 'configs/filename_config.txt'
+DEFAULT_SIZES_DIR = 'configs/default_sizes.txt'
 
 BLACKLIST = None
 WHITELIST = None
 FILENAMES = {}
+DEFAULT_SIZES = {}
 
 '''
     Load the blacklist
@@ -70,16 +72,43 @@ def load_file_names(file_dir = FILENAMELIST_DIR):
             tmp = line.rsplit()
             FILENAMES[tmp[0]] = tmp[1]
 
+def load_default_sizes(file_dir = DEFAULT_SIZES_DIR):
+    global DEFAULT_SIZES
+    with open(os.path.normpath(file_dir), 'r') as file_sizes:
+        lines = file_sizes.readlines()
 
-def get_texture_scale(name, base_scale):
+        for line in lines:
+            if line == '#':
+                continue
+            tmp = line.rsplit()
+            sizes = tmp[2].rsplit(',')
+
+            if not tmp[0] in DEFAULT_SIZES:
+                DEFAULT_SIZES[tmp[0]] = []
+
+            DEFAULT_SIZES[tmp[0]].append( (tmp[1], (float(sizes[0]), float(sizes[1]))) )
+    print(DEFAULT_SIZES)
+
+
+def get_texture_scale(name, base_scale, config_raw):
     global BLACKLIST
     global WHITELIST
+    global DEFAULT_SIZES
 
     if not BLACKLIST.get_with_wildcard(name):
         print('Skip ', name)
         return None
     tmp = WHITELIST.get_with_wildcard(name)
-    return (int(base_scale * tmp[0]), int(base_scale * tmp[1]))
+
+    default_sizes = (1.0, 1.0)
+    config = str(config_raw[0]) + '-' + config_raw[1]
+
+    if config in DEFAULT_SIZES:
+        for termination, sizes in DEFAULT_SIZES[config]:
+            if termination in name:
+                default_sizes = sizes
+                break
+    return (int(base_scale * default_sizes[0] * tmp[0]), int(base_scale * default_sizes[1] * tmp[1]))
 
 def get_file_name(file_dir, config):
     global FILENAMES
