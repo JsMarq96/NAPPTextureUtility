@@ -10,8 +10,10 @@ from RadixTree import RadixTree
 
     Blacklist Format:
         List of texture names and dirs, relative to the folder
-    Whitelist formal
+    Whitelist formal:
         texture/dir 1.0,2.0
+    Default sizes format:
+        tex_pack_export_name filetermination(_n/_s) size multiplicator
 
     TODO: Externalice the config dirs
 '''
@@ -102,6 +104,7 @@ def get_texture_scale(name, base_scale, config_raw):
 
     default_sizes = (1.0, 1.0)
     config = str(config_raw[0]) + '-' + config_raw[1]
+    print(name, base_scale, config)
 
     if config in DEFAULT_SIZES:
         for termination, sizes in DEFAULT_SIZES[config]:

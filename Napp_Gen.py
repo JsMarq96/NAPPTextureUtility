@@ -9,7 +9,7 @@ from TexturesBlacklist import load_file_names, get_file_name, load_default_sizes
 from TextureReplacment import get_replacement_list, load_replacements
 
 '''
-    TODO cleanup the Texture replacement: refactor names, and cleanup... inda nasty
+    TODO cleanup the Texture replacement: refactor names, and cleanup... kinda nasty
 '''
 
 
