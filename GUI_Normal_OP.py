@@ -19,6 +19,31 @@ def strength_normals(url_list, folder_dir):
     strength_normal_list(normal_list, folder_dir)
     popup_dialog('Finished!')
 
+'''
+    PyQt5 Line edit widget that adds drag n drop funcionality
+'''
+class DnDLineEdit(QLineEdit):
+    def __init__(self, folders = False):
+        # Basic widget config
+        super().__init__()
+        # For Drag n drops
+        print(self.setAcceptDrops(True))
+        self.file_url = ''
+        self.accept_folders = folders
+
+    def dropEvent(self, event):
+        # For the nature of the widget we just take the first
+        # element
+        self.setText(event.mimeData().urls()[0].path())
+
+    def dragEnterEvent(self, event):
+        print('drop')
+        event.accept()
+        return
+        if event.mimeData().hasUrls():
+            event.accept()
+        else:
+            event.ignore()
 
 class DnDWindow(QWidget):
     def __init__(self):
