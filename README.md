@@ -5,19 +5,19 @@ Now, it includes a blacklist functionality, that states the textures that can no
 - Batch scale up and down of a folder of images or texture pack, duplicating all the underliying files.
 - Blacklist to avoid scalling some images.
 - Whitelist to scale to a not standart (1:1) aspect ratio.
+- Whitelist to scale to non-standart sizes but based on texture type.
 - Export directly to zip.
+- Tool to sthenght normal maps, based on the Add/Sub operation of Substance designer.
 - Add export names for some configs.
 ## Depedencies
 - libimagequant (pip)
-- tkinter
+- PyQt5
 - Pillow
 - multiprocessing
 ## Linux installation guide
-If you are on Ubuntu/debian based distro, you should be able to run the .sh scrip on the isntaller folder
+If you are on Ubuntu/debian based distro, you should be able to run the .sh script on the isntaller folder
 ## Windows installation guide
-For now, the program is running on the Windows Linux Subsystem instead than on vainilla Windows.
-1) On the Turn Windows Features On or Off pannel, select to enable Windows Subsystem fro Linux and reboot your computer.
-2) Install the Ubuntu 20.04 program from the Microsoft store.
-3) Launch it and wait for the installation, and set up you user and password of you tiny Linux installation.
-4) Install Xming, a X server windows manager, in order to get a GUI from the Ubuntu install; from https://sourceforge.net/projects/xming/.
-5) Then run the WSL_installer.bat on the installer folder, accept the downloads and you are ready to go!
+For now, the program is running on the MYSYS2 instead than on vainilla Windows.
+1) Get and install MYSYS2 from https://www.msys2.org/.
+2) Then run the windows_installer.bat, wait a bit, press Y when needed.
+3) You are ready to go.
