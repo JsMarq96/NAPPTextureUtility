@@ -104,7 +104,6 @@ def get_texture_scale(name, base_scale, config_raw):
 
     default_sizes = (1.0, 1.0)
     config = str(config_raw[0]) + '-' + config_raw[1]
-    print(name, base_scale, config)
 
     if config in DEFAULT_SIZES:
         for termination, sizes in DEFAULT_SIZES[config]:

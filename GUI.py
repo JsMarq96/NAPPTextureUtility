@@ -20,7 +20,7 @@ class DnDLineEdit(QLineEdit):
         # Basic widget config
         super().__init__()
         # For Drag n drops
-        self.setAcceptDrops(True)
+        print(self.setAcceptDrops(True))
         self.file_url = ''
         self.accept_folders = folders
 
@@ -29,7 +29,10 @@ class DnDLineEdit(QLineEdit):
         # element
         self.setText(event.mimeData().urls()[0].path())
 
-    def dropeEvent(self, event):
+    def dragEnterEvent(self, event):
+        print('drop')
+        event.accept()
+        return
         if event.mimeData().hasUrls():
             event.accept()
         else:
@@ -99,12 +102,12 @@ def main_GUI(window):
 
     # Button events
     def origin_search():
-        filename, _ = QFileDialog.getOpenFileName(None, "Open Folder", '.', "")
+        filename = QFileDialog.getExistingDirectory(None, "Open Folder", '.')
         if filename:
             origin_input.setText(filename)
 
     def result_search():
-        filename, _ = QFileDialog.getOpenFileName(None, "Open Folder", '.', "")
+        filename = QFileDialog.getExistingDirectory(None, "Open Folder", '.')
         if filename:
             result_input.setText(filename)
 
