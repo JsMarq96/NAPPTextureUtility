@@ -36,7 +36,6 @@ def file_dir_crop(x):
 '''
 def directory_clone(directory, location='', file_name=''):
     new_dir_name = os.path.join(location, file_name)
-    print(new_dir_name)
     shutil.copytree(directory, new_dir_name)
         
     return new_dir_name
