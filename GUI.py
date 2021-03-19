@@ -27,7 +27,7 @@ class DnDLineEdit(QLineEdit):
     def dropEvent(self, event):
         # For the nature of the widget we just take the first
         # element
-        self.setText(event.mimeData().urls()[0].path())
+        self.setText(event.mimeData().urls()[0].path()[1:])
 
     def dragEnterEvent(self, event):
         print('drop')
@@ -128,7 +128,7 @@ def main_GUI(window):
 
         popup_dialog('Processing...')
 
-        generate_resourcepacks(origin_input.text()[1:], compress_list, result_input.text()[1:], pack_version_input.text())
+        generate_resourcepacks(origin_input.text(), compress_list, result_input.text(), pack_version_input.text())
 
         scale_button.setEnabled(True)
         scale_zip_button.setEnabled(True)
@@ -141,7 +141,7 @@ def main_GUI(window):
 
         popup_dialog('Processing...')
 
-        generate_resourcepacks(origin_input.text()[1:], compress_list, result_input.text()[1:], pack_version_input.text(), True)
+        generate_resourcepacks(origin_input.text(), compress_list, result_input.text(), pack_version_input.text(), True)
 
         scale_button.setEnabled(True)
         scale_zip_button.setEnabled(True)
