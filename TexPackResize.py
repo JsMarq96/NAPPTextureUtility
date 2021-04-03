@@ -27,6 +27,10 @@ def img_scale_adapter(x):
     image_scale(x[0], x[0], x[1])
 
 def file_dir_crop(x):
+    # Get os relative path
+    # Kind of a hack TBW
+    tmp_path = os.path.join('QWERTYUIDMDNW', x)
+    x = os.path.relpath(tmp_path, 'QWERTYUIDMDNW')
     if 'assets' in x:
         return 'assets' + x.rsplit('assets')[1]
     return x

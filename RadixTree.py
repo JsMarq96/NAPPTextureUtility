@@ -47,6 +47,8 @@ class RadixTree:
 
     def get_with_wildcard(self, search_str):
         '''Flexibilices the get procedure with the addiciont of * wildcards'''
+        if 'magma' in search_str:
+            print(search_str, '--------<<<<<<<')
         iter_node = self.base_node.nodes[ord(search_str[0])]
         while not iter_node is None:
             similarity = str_compare(search_str, iter_node.base_str)
@@ -81,6 +83,7 @@ class RadixTree:
         while True:
             base_similarity = str_compare(search_str, iter_node.base_str)
             crop_search_str = search_str[base_similarity:]
+            print('~~~crop search str', crop_search_str, 'search_str', search_str)
             search_index = ord(crop_search_str[0])
 
             if base_similarity < len(iter_node.base_str):
