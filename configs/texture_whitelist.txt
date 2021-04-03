@@ -3,3 +3,7 @@
 assets/minecraft/textures/entity/skeleton/skeleton* 2.0,1.0
 assets/minecraft/textures/painting/graham.png 1.0,2.0
 assets/minecraft/textures/painting/wanderer.png 1.0,2.0
+assets/minecraft/textures/block/magma.png 1.0,10.0
+assets/minecraft/textures/block/crying_obsidian.png 1.0,10.0
+assets/minecraft/textures/block/nether_portal.png 1.0,10.0
+assets/minecraft/textures/block/nether_portal_n.png 1.0,10.0
