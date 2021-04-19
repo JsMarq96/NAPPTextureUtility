@@ -50,7 +50,7 @@ def generate_resourcepacks(base_resource_pack, variations, result_folder, name_s
         if spl_p[1] != 'None':
             compress_directory(new_directory, COMP_DICT[spl_p[1]])
 
-        file_replacement_dict = get_replacement_list(pack)
+        file_replacement_dict = get_replacement_list(pack[0] + '-' + pack[1])
 
         if not file_replacement_dict is None:
             for texture_dest in file_replacement_dict:
