@@ -13,7 +13,6 @@ def popup_dialog(txt):
     msg.exec_()
 
 def strength_normals(url_list, folder_dir):
-    popup_dialog('Processing...')
     normal_list = [ os.path.normpath(x.path()) for x in url_list ]
     
     strength_normal_list(normal_list, folder_dir)

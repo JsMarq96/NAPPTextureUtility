@@ -1,6 +1,6 @@
 import os.path
 import numpy as np 
-from PIL import Image
+from PIL import Image, ImageFilter
 from multiprocessing import Pool, cpu_count
 
 from AddSub import add_sub
@@ -16,6 +16,7 @@ def strength_single_normal(params):
     print(normal_dir, params)
 
     normal = np.asarray(Image.open(normal_dir).convert('RGBA'))
+    #Image.fromarray(add_sub(normal)).filter(ImageFilter.BoxBlur(1)).save(address_result)
     Image.fromarray(add_sub(normal)).save(address_result)
 
 
