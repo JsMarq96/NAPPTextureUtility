@@ -4,6 +4,7 @@ from PIL import Image
 from DirectoryTransversal import file_search
 from TexturesBlacklist import get_texture_scale
 from multiprocessing import Pool, cpu_count
+import numpy as np
 
 IMAGE_TYPES = ('.png', '.jpg')
 
@@ -19,6 +20,10 @@ IMAGE_TYPES = ('.png', '.jpg')
 '''
 def image_scale(img_adress, result_img_adress, new_size):
     img = Image.open(img_adress).convert('RGBA')
+    if ('_n' in img_adress):
+        img_ar = np.asarray(img)
+        img_ar = np.clip(img_ar[:, :, 3], 0.01, 1000.0)
+        img = Image.fromarray(img_ar.astype(np.uint8))
     img.resize(new_size, Image.BICUBIC).save(result_img_adress)
 
 def img_scale_adapter(x):
