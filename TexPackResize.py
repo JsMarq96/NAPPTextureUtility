@@ -20,10 +20,6 @@ IMAGE_TYPES = ('.png', '.jpg')
 '''
 def image_scale(img_adress, result_img_adress, new_size):
     img = Image.open(img_adress).convert('RGBA')
-    if ('_n' in img_adress):
-        img_ar = np.asarray(img)
-        img_ar = np.clip(img_ar[:, :, 3], 0.01, 1000.0)
-        img = Image.fromarray(img_ar.astype(np.uint8))
     img.resize(new_size, Image.BICUBIC).save(result_img_adress)
 
 def img_scale_adapter(x):
@@ -60,6 +56,7 @@ def scale_directory(directory, img_types, scale, compress_mode):
     print('Scalling ' + str(len(images_in_directory)) + ' on ' + directory +' images...')
     with Pool(processes=cpu_count()) as pool:
         pool.map(img_scale_adapter, images_in_directory)
+
 
 '''
     (Main function)

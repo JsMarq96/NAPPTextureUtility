@@ -1,0 +1,6 @@
+{
+	"parent": "block/custom_fence_side",
+	"textures": {
+		"texture": "block/stripped_jungle_log"
+	}
+}
