@@ -4,7 +4,11 @@ from PIL import Image
 
 def split_text(text_source, split_nums, save_dir='', img_format='.png'):
     for suffix in ['', '_n', '_s']:
-        img = np.asarray(Image.open(text_source + suffix + '.png').convert('RGB'))
+        if suffix == '_n':
+            img = np.asarray(Image.open(text_source + suffix + '.png').convert('RGB'))
+        else:
+            img = np.asarray(Image.open(text_source + suffix + '.png').convert('RGBA'))
+            
         w, h, dims = img.shape
         n_w = int(w/int(split_nums))
         n_h = int(h/int(split_nums))
