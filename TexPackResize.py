@@ -27,6 +27,13 @@ def image_scale(img_adress, result_img_adress, new_size):
         alpha = np.asarray(img.getchannel('A'))
         alpha = np.clip(alpha, 0.0001, 10000.0)
         img = Image.merge('RGBA', (R, G, B, Image.fromarray(alpha.astype(np.uint8))))
+    elif not '_s' in img_adress:
+        R = img.getchannel('R')
+        G = img.getchannel('G')
+        B = img.getchannel('B')
+        alpha = np.asarray(img.getchannel('A'))
+        alpha = np.where(alpha > 0.5, 1.0, 0.0)
+        img = Image.merge('RGBA', (R, G, B, Image.fromarray(alpha.astype(np.uint8))))
 
     img.resize(new_size, Image.BICUBIC).save(result_img_adress)
 
