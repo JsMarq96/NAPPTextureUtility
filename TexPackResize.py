@@ -30,7 +30,7 @@ def image_scale(img_adress, result_img_adress, new_size):
 
     img = img.resize(new_size, Image.BICUBIC)
 
-    if not '_s.' in img_adress and not '_n.' in img_adress:
+    if 'textures\item\\' in img_adress and not '_s.' in img_adress and not '_n.' in img_adress:
         R = img.getchannel('R')
         G = img.getchannel('G')
         B = img.getchannel('B')
