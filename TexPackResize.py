@@ -24,18 +24,20 @@ def image_scale(img_adress, result_img_adress, new_size):
         R = img.getchannel('R')
         G = img.getchannel('G')
         B = img.getchannel('B')
-        alpha = np.asarray(img.getchannel('A'))
-        alpha = np.clip(alpha, 0.0001, 10000.0)
-        img = Image.merge('RGBA', (R, G, B, Image.fromarray(alpha.astype(np.uint8))))    
+        alpha = np.asarray(img.getchannel('A'), dtype=np.uint8)
+        alpha = np.clip(alpha, 1, 255)
+        img = Image.merge('RGBA', (R, G, B, Image.fromarray(alpha)))
 
     img = img.resize(new_size, Image.BICUBIC)
 
-    if 'textures\item\\' in img_adress and not '_s.' in img_adress and not '_n.' in img_adress:
+    if 'textures\\item\\' in img_adress and not '_s.' in img_adress and not '_n.' in img_adress:
+        # Use neraest interpolation only on items, for avoiding the interpolation 
+        # due to Pillow no applying a premultiplicative alpha channel
         R = img.getchannel('R')
         G = img.getchannel('G')
         B = img.getchannel('B')
-        alpha = np.asarray(img.getchannel('A'))
-        alpha = np.where(alpha > 0.5, 255.0, 0.0)
+        alpha = np.asarray(img.getchannel('A'), dtype=np.uint8)
+        alpha = np.where(alpha > 127, 255, 0)
         img = Image.merge('RGBA', (R, G, B, Image.fromarray(alpha.astype(np.uint8))))
 
     img.save(result_img_adress)
@@ -72,7 +74,7 @@ def scale_directory(directory, img_types, scale, compress_mode):
     images_in_directory = [(x, get_texture_scale(file_dir_crop(x), scale, compress_mode)) for x in images_in_directory]
 
     print('Scalling ' + str(len(images_in_directory)) + ' on ' + directory +' images...')
-    with Pool(processes=cpu_count()) as pool:
+    with Pool(processes=cpu_count()-4) as pool:
         pool.map(img_scale_adapter, images_in_directory)
 
 
